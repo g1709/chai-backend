@@ -1,24 +1,17 @@
-//require('dotenv').config()
+import express from "express";
 import dotenv from "dotenv";
-import connnectDB from "./db/index";
+import connectDB from "./db/index.js";
 
-dotenv.config({
-  path: "./env",
-});
+dotenv.config(); // .env auto read karega
 
-connectDB();
+const app = express();
 
-const connectDB = async () => {
-  try {
-    const connectionInstance = await mongoose.connect(
-      `${process.env.MONGODB_URI}/${DB_NAME}`,
-    );
-    console.log(`\n MONGODB connected !! DB HOST: $ 
-            {connectionInstance.connection.host}}`);
-  } catch (error) {
-    console.log("MONGODB connection error", error);
-    process.exit(1);
-  }
-};
-
-export default connectDB;
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+      console.log(`Server running on port ${process.env.PORT || 8000}`);
+    });
+  })
+  .catch((err) => {
+    console.log("MONGO db connection failed !!!", err);
+  });
